@@ -2101,53 +2101,61 @@
   text-align: center;
 }
 
+/* BACKDROP */
 .popup {
   display: none;
   position: fixed;
   top: 0; left: 0;
-  width: 100%;
-  height: 100%;
-  backdrop-filter: blur(4px);
-  background: rgba(0, 0, 0, 0.6);
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(6px);
   justify-content: center;
   align-items: center;
   z-index: 999;
 }
 
+/* KARTU POPUP */
 .popup-content-order {
-  background: #fff;
-  color: #111;
-  border-radius: 12px;
-  padding: 2rem;
-  max-width: 90%;
-  width: 400px;
+  background: #ffffff;
+  color: #333;
+  border-radius: 16px;
+  padding: 30px 24px;
+  width: 100%;
+  max-width: 420px;
   text-align: center;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
   position: relative;
+  font-family: "Segoe UI", sans-serif;
 }
 
+/* TOMBOL CLOSE */
 .popup-close {
   position: absolute;
-  top: 10px;
-  right: 15px;
+  top: 12px;
+  right: 16px;
   font-size: 1.5rem;
   background: none;
   border: none;
   cursor: pointer;
-  color: #900;
+  color: #999;
+}
+.popup-close:hover {
+  color: #222;
 }
 
+/* TOMBOL UTAMA */
 .popup-content-order button {
   background-color: #25d366;
   color: white;
   border: none;
-  padding: 10px 20px; 
-  border-radius: 10px;
+  padding: 12px 24px;
+  border-radius: 8px;
   font-size: 1rem;
   cursor: pointer;
-  margin-top: 15px;
+  margin-top: 20px;
+  font-weight: 600;
 }
-
 .popup-content-order button:hover {
   background-color: #1ea955;
 }

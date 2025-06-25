@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cara Main & Voucher - Svarga Dimsum</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary-color: #a36838;
+      --primary-dark: #8a572f;
+      --primary-light: #ff944d;
+      --text-light: #e0e0e0;
+      --text-lighter: #d1d1d1;
+      --bg-dark: #1b1212;
+      --bg-darker: #190F0F;
+      --bg-gradient: linear-gradient(to left, #190F0F, #2c1414);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: white;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    .game-voucher-section {
+      padding: 2.5rem 1rem;
+      background: var(--bg-gradient);
+    }
+
+    .game-voucher-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .game-voucher-text {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .game-voucher-text h4 {
+      color: var(--primary-light);
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      font-size: 1rem;
+    }
+
+    .game-voucher-text h1 {
+      font-size: clamp(1.75rem, 5vw, 2rem);
+      background: linear-gradient(to right, var(--primary-light), #ffcc8a);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 700;
+      margin-bottom: 1.25rem;
+      line-height: 1.3;
+    }
+
+    .game-voucher-text p {
+      color: var(--text-lighter);
+      font-size: 0.9375rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .game-step-list {
+      list-style: none;
+      padding: 0;
+      margin: 1.25rem 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .game-step-list li {
+      background: rgba(255,255,255,0.05);
+      border-left: 4px solid var(--primary-color);
+      padding: 1rem;
+      border-radius: 0.75rem;
+      display: flex;
+      gap: 0.75rem;
+      align-items: flex-start;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: 0.4s ease;
+    }
+
+    .game-step-list li.animate {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .game-step-list i {
+      font-size: 1.25rem;
+      color: var(--primary-light);
+      margin-top: 0.125rem;
+    }
+
+    .step-title {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+      color: var(--primary-light);
+      font-size: 0.9375rem;
+    }
+
+    .step-desc {
+      color: var(--text-light);
+      font-size: 0.875rem;
+    }
+
+    .btn-play-game {
+      margin-top: 1rem;
+      background: var(--primary-color);
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 0.9375rem;
+      display: inline-block;
+    }
+
+    .btn-play-game:hover {
+      background-color: var(--primary-dark);
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    .game-voucher-image {
+      flex: 1;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      min-width: 0;
+      width: 100%;
+    }
+
+    .game-bubble {
+      position: absolute;
+      top: -4rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #ffefc2;
+      color: #2c1414;
+      padding: 0.75rem 1rem;
+      border-radius: 1.25rem;
+      font-weight: 500;
+      font-size: 0.875rem;
+      max-width: 18rem;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: all 0.5s ease;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      z-index: 1;
+    }
+
+    .game-voucher-image.reveal-bubble .game-bubble {
+      opacity: 1;
+      visibility: visible;
+      animation: bubbleIn 0.6s ease forwards;
+    }
+
+    @keyframes bubbleIn {
+      0% {
+        transform: translateX(-50%) translateY(20px) scale(0.95);
+        opacity: 0;
+      }
+      100% {
+        transform: translateX(-50%) translateY(0) scale(1);
+        opacity: 1;
+      }
+    }
+
+    .game-bubble::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 12px solid transparent;
+      border-top-color: #ffefc2;
+    }
+
+    .game-maskot-container {
+      position: relative;
+      max-width: 18rem;
+      width: 100%;
+      margin: 0 auto 1.5rem;
+    }
+
+    .circle {
+      position: absolute;
+      border-radius: 50%;
+      z-index: 0;
+      opacity: 0.15;
+    }
+
+    .circle-1 {
+      width: 10rem;
+      height: 10rem;
+      background: var(--primary-light);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .circle-2 {
+      width: 12rem;
+      height: 12rem;
+      border: 2px dashed var(--primary-light);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      animation: rotate 20s linear infinite;
+    }
+
+    @keyframes rotate {
+      from { transform: translate(-50%, -50%) rotate(0); }
+      to { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+
+    .icon-float {
+      position: absolute;
+      width: 2rem;
+      height: 2rem;
+      animation: floatIcon 6s infinite ease-in-out;
+    }
+
+    .icon-float:nth-child(3) { top: -1rem; left: 1rem; }
+    .icon-float:nth-child(4) { top: 1.5rem; right: -0.5rem; }
+    .icon-float:nth-child(5) { bottom: 0.5rem; left: -0.75rem; }
+    .icon-float:nth-child(6) { bottom: -1rem; right: 1.5rem; }
+
+    @keyframes floatIcon {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-0.75rem); }
+    }
+
+    .game-maskot {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      max-width: 16rem;
+      filter: drop-shadow(0 0.5rem 0.75rem rgba(0, 0, 0, 0.2));
+    }
+
+    /* Chatbot Styles */
+    .chatbot-container {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1rem;
+      z-index: 999;
+    }
+
+    .chatbot-toggle {
+      background-color: var(--primary-color);
+      color: white;
+      width: 3.5rem;
+      height: 3.5rem;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
+      border: none;
+      outline: none;
+    }
+
+    .chatbot-toggle:hover, .chatbot-toggle:focus {
+      transform: scale(1.1);
+      background-color: var(--primary-dark);
+    }
+
+    .chatbot-toggle i {
+      font-size: 1.5rem;
+    }
+
+    .chatbot-popup {
+      display: none;
+      width: calc(100vw - 2rem);
+      max-width: 24rem;
+      height: 32rem;
+      max-height: 80vh;
+      background-color: white;
+      border-radius: 1rem;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+      overflow: hidden;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .chatbot-header {
+      background-color: var(--primary-color);
+      color: white;
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .chatbot-header h3 {
+      margin: 0;
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .close-chatbot {
+      font-size: 1.5rem;
+      cursor: pointer;
+      background: none;
+      border: none;
+      color: white;
+      padding: 0.25rem;
+    }
+
+    .chatbot-body {
+      flex: 1;
+      padding: 1rem;
+      overflow-y: auto;
+      background-color: #f9f5f0;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .chatbot-footer {
+      display: flex;
+      padding: 0.75rem;
+      border-top: 1px solid #eee;
+      background-color: white;
+      position: sticky;
+      bottom: 0;
+    }
+
+    .chatbot-footer input {
+      flex: 1;
+      padding: 0.75rem 1rem;
+      border: 1px solid #ddd;
+      border-radius: 1.5rem;
+      outline: none;
+      font-size: 0.875rem;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+    }
+
+    .chatbot-footer input:focus {
+      border-color: var(--primary-color);
+    }
+
+    .chatbot-footer button {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 2.75rem;
+      height: 2.75rem;
+      margin-left: 0.5rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.3s;
+    }
+
+    .chatbot-footer button:hover {
+      background-color: var(--primary-dark);
+    }
+
+    .user-message, .bot-message {
+      margin-bottom: 1rem;
+      display: flex;
+      word-break: break-word;
+    }
+
+    .user-message {
+      justify-content: flex-end;
+    }
+
+    .bot-message {
+      justify-content: flex-start;
+    }
+
+    .message-content {
+      max-width: 85%;
+      padding: 0.75rem 1rem;
+      border-radius: 1rem;
+      position: relative;
+      line-height: 1.4;
+      font-size: 0.875rem;
+    }
+
+    .user-message .message-content {
+      background-color: var(--primary-color);
+      color: white;
+      border-bottom-right-radius: 0.25rem;
+    }
+
+    .bot-message .message-content {
+      background-color: white;
+      color: #333;
+      border-bottom-left-radius: 0.25rem;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .bot-icon {
+      width: 2rem;
+      height: 2rem;
+      margin-right: 0.5rem;
+      border-radius: 50%;
+      object-fit: cover;
+      align-self: flex-start;
+    }
+
+    .quick-questions {
+      margin-top: 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .quick-questions button {
+      display: block;
+      width: 100%;
+      margin: 0;
+      padding: 0.5rem 0.75rem;
+      background-color: #f0e6d9;
+      border: none;
+      border-radius: 0.75rem;
+      text-align: left;
+      cursor: pointer;
+      font-size: 0.8125rem;
+      color: #5a4a3a;
+      transition: background-color 0.2s;
+      word-break: break-word;
+    }
+
+    .quick-questions button:hover {
+      background-color: #e0d6c9;
+    }
+
+    /* Typing Indicator */
+    .typing-indicator {
+      display: flex;
+      padding: 0.5rem 0.75rem;
+      background-color: white;
+      border-radius: 1rem;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      width: fit-content;
+      margin-bottom: 1rem;
+    }
+
+    .typing-dot {
+      width: 0.5rem;
+      height: 0.5rem;
+      background-color: var(--primary-color);
+      border-radius: 50%;
+      margin: 0 0.125rem;
+      animation: typingAnimation 1.4s infinite ease-in-out;
+    }
+
+    .typing-dot:nth-child(1) {
+      animation-delay: 0s;
+    }
+
+    .typing-dot:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .typing-dot:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes typingAnimation {
+      0%, 60%, 100% { transform: translateY(0); }
+      30% { transform: translateY(-5px); }
+    }
+
+    .bot-message, .user-message {
+      animation: fadeIn 0.3s ease-out;
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+      .game-voucher-container {
+        flex-direction: column-reverse;
+        gap: 1.5rem;
+      }
+
+      .game-voucher-text {
+        text-align: center;
+      }
+
+      .game-step-list li {
+        flex-direction: column;
+        text-align: center;
+        align-items: center;
+      }
+
+      .game-bubble {
+        width: 90%;
+        font-size: 0.8125rem;
+        top: -3.5rem;
+      }
+
+      .game-maskot-container {
+        max-width: 14rem;
+      }
+
+      .btn-play-game {
+        width: 100%;
+        max-width: 18rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .game-voucher-section {
+        padding: 1.5rem 1rem;
+      }
+
+      .game-step-list li {
+        padding: 0.75rem;
+      }
+
+      .chatbot-container {
+        bottom: 1rem;
+        right: 0.75rem;
+      }
+      
+      .chatbot-toggle {
+        width: 3rem;
+        height: 3rem;
+      }
+      
+      .chatbot-popup {
+        width: calc(100vw - 1.5rem);
+        right: 0.75rem;
+      }
+      
+      .message-content {
+        max-width: 90%;
+        padding: 0.625rem 0.875rem;
+        font-size: 0.8125rem;
+      }
+      
+      .quick-questions button {
+        font-size: 0.75rem;
+        padding: 0.5rem;
+      }
+    }
+
+    /* For iOS input zoom prevention */
+    @media screen and (-webkit-min-device-pixel-ratio:0) {
+      select,
+      textarea,
+      input {
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<section class="game-voucher-section" id="CaraMain">
+  <div class="game-voucher-container">
+    <div class="game-voucher-text">
+      <h4>Panduan Bermain</h4>
+      <h1>Cara Main & Dapatkan Voucher</h1>
+      <p>Ikuti langkah mudah berikut untuk bermain game memory dan dapatkan kode voucher spesial:</p>
+      <ul class="game-step-list">
+        <li><i class="fas fa-gamepad"></i>
+          <div>
+            <div class="step-title">Buka Game</div>
+            <div class="step-desc">Klik tombol "Mainkan Game" di bawah untuk memulai game memory.</div>
+          </div>
+        </li>
+        <li><i class="fas fa-brain"></i>
+          <div>
+            <div class="step-title">Cocokkan Kartu</div>
+            <div class="step-desc">Temukan pasangan kartu dan selesaikan game secepat mungkin.</div>
+          </div>
+        </li>
+        <li><i class="fas fa-award"></i>
+          <div>
+            <div class="step-title">Raih Skor Tinggi</div>
+            <div class="step-desc">Semakin tinggi skor, semakin besar kesempatan dapat voucher.</div>
+          </div>
+        </li>
+        <li><i class="fas fa-ticket-alt"></i>
+          <div>
+            <div class="step-title">Dapatkan Voucher</div>
+            <div class="step-desc">Setelah selesai, kamu akan mendapat kode voucher unik.</div>
+          </div>
+        </li>
+        <li><i class="fab fa-whatsapp"></i>
+          <div>
+            <div class="step-title">Tukarkan</div>
+            <div class="step-desc">Kirim kode voucher ke WhatsApp kami untuk klaim diskon.</div>
+          </div>
+        </li>
+      </ul>
+      <button class="btn-play-game" onclick="document.getElementById('game')?.scrollIntoView({ behavior: 'smooth' });">Mainkan Game</button>
+    </div>
+
+    <div class="game-voucher-image">
+      <div class="game-bubble"></div>
+      <div class="game-maskot-container">
+        <div class="circle circle-1"></div>
+        <div class="circle circle-2"></div>
+        <img src="https://cdn-icons-png.flaticon.com/512/5787/5787016.png" class="icon-float" alt="">
+        <img src="https://cdn-icons-png.flaticon.com/512/5787/5787034.png" class="icon-float" alt="">
+        <img src="https://cdn-icons-png.flaticon.com/512/5787/5787026.png" class="icon-float" alt="">
+        <img src="https://cdn-icons-png.flaticon.com/512/5787/5787038.png" class="icon-float" alt="">
+        <img src="img/maskot2.png" alt="Maskot" class="game-maskot" />
+      </div>
+      <button class="btn-play-game mobile-only" onclick="document.getElementById('game')?.scrollIntoView({ behavior: 'smooth' });">Mainkan Game</button>
+    </div>
+  </div>
+</section>
+
+<!-- AI Chatbot Widget -->
+<div class="chatbot-container">
+  <button class="chatbot-toggle" onclick="toggleChatbot()" aria-label="Open chatbot">
+    <i class="fas fa-robot"></i>
+  </button>
+  
+  <div class="chatbot-popup" id="chatbotPopup">
+    <div class="chatbot-header">
+      <h3>Svarga Assistant</h3>
+      <button class="close-chatbot" onclick="toggleChatbot()" aria-label="Close chatbot">&times;</button>
+    </div>
+    <div class="chatbot-body" id="chatbotMessages">
+      <!-- Initial message will appear here -->
+      <div class="bot-message">
+        <img src="https://i.ibb.co/0j7XJ3z/robot-icon.png" alt="Bot Icon" class="bot-icon">
+        <div class="message-content">
+          Halo! Saya Asisten Svarga Dimsum. Ada yang bisa saya bantu? 😊
+          <div class="quick-questions">
+            <button onclick="sendQuickQuestion(this)">Menu apa saja yang tersedia?</button>
+            <button onclick="sendQuickQuestion(this)">Berapa harga dimsum original?</button>
+            <button onclick="sendQuickQuestion(this)">Bagaimana cara memesan?</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="chatbot-footer">
+      <input type="text" id="userInput" placeholder="Ketik pesan Anda..." onkeypress="handleKeyPress(event)" aria-label="Type your message">
+      <button onclick="sendMessage()" aria-label="Send message"><i class="fas fa-paper-plane"></i></button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Toggle chatbot visibility
+  function toggleChatbot() {
+    const chatbot = document.getElementById('chatbotPopup');
+    if (chatbot.style.display === 'flex') {
+      chatbot.style.display = 'none';
+    } else {
+      chatbot.style.display = 'flex';
+    }
+  }
+
+  // Handle quick question buttons
+  function sendQuickQuestion(button) {
+    const question = button.textContent;
+    document.getElementById('userInput').value = question;
+    sendMessage();
+  }
+
+  // Handle enter key press
+  function handleKeyPress(e) {
+    if (e.key === 'Enter') {
+      sendMessage();
+    }
+  }
+
+  // Send message function
+  function sendMessage() {
+    const input = document.getElementById('userInput');
+    const message = input.value.trim();
+    if (message === '') return;
+
+    // Add user message to chat
+    addMessage(message, 'user');
+    input.value = '';
+    
+    // Simulate bot response
+    setTimeout(() => {
+      addMessage(getBotResponse(message), 'bot');
+    }, 800);
+  }
+
+  // Add message to chat
+  function addMessage(text, sender) {
+    const chat = document.getElementById('chatbotMessages');
+    
+    if (sender === 'bot') {
+      // Show typing indicator first
+      const typingIndicator = document.createElement('div');
+      typingIndicator.className = 'typing-indicator';
+      typingIndicator.innerHTML = `
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+      `;
+      chat.appendChild(typingIndicator);
+      chat.scrollTop = chat.scrollHeight;
+      
+      // Remove typing indicator after delay
+      setTimeout(() => {
+        typingIndicator.remove();
+        
+        // Add actual message
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'bot-message';
+        messageDiv.innerHTML = `
+          <img src="https://i.ibb.co/0j7XJ3z/robot-icon.png" alt="Bot Icon" class="bot-icon">
+          <div class="message-content">${text}</div>
+        `;
+        chat.appendChild(messageDiv);
+        chat.scrollTop = chat.scrollHeight;
+      }, 1500);
+    } else {
+      // User message
+      const messageDiv = document.createElement('div');
+      messageDiv.className = 'user-message';
+      messageDiv.innerHTML = `
+        <div class="message-content">${text}</div>
+      `;
+      chat.appendChild(messageDiv);
+      chat.scrollTop = chat.scrollHeight;
+    }
+  }
+
+  // Simple bot response logic
+  function getBotResponse(question) {
+    question = question.toLowerCase();
+    
+    if (question.includes('menu') || question.includes('tersedia')) {
+      return "Kami menyediakan berbagai varian dimsum seperti: Original, Udang, Ayam Jamur, dan Spesial. Juga ada paket combo untuk 2-4 orang.";
+    } else if (question.includes('harga') || question.includes('original')) {
+      return "Dimsum original kami dijual Rp25.000 per porsi (isi 6 biji). Ada juga paket hemat 3 porsi Rp65.000.";
+    } else if (question.includes('pesan') || question.includes('memesan')) {
+      return "Anda bisa pesan melalui: 1. WhatsApp kami di 0812-3456-7890 2. Aplikasi GoFood/GrabFood 3. Datang langsung ke outlet kami.";
+    } else if (question.includes('alamat') || question.includes('lokasi')) {
+      return "Outlet kami berada di Jl. Raya Dimsum No. 123, Kota Anda. Buka setiap hari dari jam 10.00-21.00 WIB.";
+    } else if (question.includes('voucher') || question.includes('diskon')) {
+      return "Anda bisa dapatkan voucher diskon dengan bermain memory game di website kami. Klik bagian 'Mainkan Game' untuk mulai bermain!";
+    } else {
+      return "Maaf, saya belum paham pertanyaan Anda. Untuk informasi lebih lanjut, Anda bisa hubungi kami via WhatsApp di 0812-3456-7890.";
+    }
+  }
+
+  // Animation for game steps and bubble
+  window.addEventListener('scroll', function () {
+    const section = document.querySelector('.game-voucher-section');
+    const bubbleParent = section.querySelector('.game-voucher-image');
+    const bubble = bubbleParent.querySelector('.game-bubble');
+    const sectionTop = section.getBoundingClientRect().top;
+    const windowHeight = window.innerHeight;
+
+    if (sectionTop < windowHeight - 100 && !bubble.classList.contains('typed')) {
+      bubbleParent.classList.add('reveal-bubble');
+      typeBubbleText(bubble, "Yuk mainkan memory game & dapatkan kode vouchermu sekarang!");
+    }
+  });
+
+  function typeBubbleText(element, text, speed = 40) {
+    element.classList.add('typed');
+    element.textContent = "";
+    let i = 0;
+    const typing = setInterval(() => {
+      if (i < text.length) {
+        element.textContent += text[i++];
+      } else {
+        clearInterval(typing);
+      }
+    }, speed);
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    const steps = document.querySelectorAll('.game-step-list li');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, index) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => {
+            entry.target.classList.add('animate');
+          }, index * 150);
+        }
+      });
+    }, {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    });
+
+    steps.forEach(step => observer.observe(step));
+  });
+</script>
+</body>
+</html>

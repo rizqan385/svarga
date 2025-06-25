@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dimsum Order</title>
+</head>
+<style>
+        /* Menu */
+  #menu-dimsum {
+    padding: 60px 20px;
+     background: linear-gradient(to left, #190F0F, #2c1414);
+    color: #fff;
+    font-family: sans-serif;
+  }
+
+  #menu-dimsum h2 {
+    text-align: center;
+    font-size: 2.5rem;
+    color: #FFA559;
+    margin-bottom: 10px;
+  }
+
+  #menu-dimsum .subtext {
+    text-align: center;
+    font-size: 1rem;
+    color: #ddd;
+    margin-bottom: 40px;
+  }
+
+  .menu-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 25px;
+    max-width: 1200px;
+    margin: auto;
+  }
+
+  .menu-card {
+    background: #2b1717;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+    transition: 0.3s;
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeIn 0.6s ease forwards;
+  }
+
+  .menu-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+  }
+
+  .menu-info {
+    padding: 16px;
+  }
+
+  .menu-info h3 {
+    font-size: 1.2rem;
+    color: #FFA559;
+    margin-bottom: 6px;
+  }
+
+  .menu-info p {
+    font-size: 0.95rem;
+    color: #ccc;
+    margin-bottom: 10px;
+  }
+
+  .rating {
+    color: gold;
+    margin-bottom: 6px;
+  }
+
+  .menu-price {
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin-bottom: 12px;
+  }
+
+  .buy-btn {
+    width: 100%;
+    padding: 10px;
+    background: #FFA559;
+    color: #2b1717;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+
+  .buy-btn:hover {
+    background: #ffbb77;
+  }
+
+  /* POPUP */
+.order-popup {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(8px);
+      z-index: 999;
+      justify-content: center;
+      align-items: center;
+      animation: fadeIn 0.4s ease-in-out;
+    }
+
+    .order-popup-content {
+      background: #ffefc2;
+      color: #2b1717;
+      padding: 32px 24px;
+      border-radius: 16px;
+      max-width: 500px;
+      width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+      position: relative;
+      animation: slideUp 0.5s ease-out;
+    }
+
+    .order-popup-header h4 {
+      font-size: 1.8rem;
+      color: #FFA559;
+      margin-bottom: 6px;
+    }
+
+    .order-popup-subtext {
+      font-size: 0.9rem;
+      color: #666;
+      margin-bottom: 24px;
+    }
+
+    .order-popup-body {
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+      box-sizing: border-box;
+    }
+
+    .form-group textarea {
+      height: 80px;
+      resize: vertical;
+    }
+
+    .delivery-option {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+
+    .delivery-option label {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+    }
+
+    .delivery-option input {
+      width: auto;
+    }
+
+    .payment-methods {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .payment-method {
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 10px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .payment-method:hover {
+      border-color: #FFA559;
+    }
+
+    .payment-method.selected {
+      border-color: #FFA559;
+      background-color: rgba(255, 165, 89, 0.1);
+    }
+
+    .payment-method input {
+      display: none;
+    }
+
+    .payment-method img {
+      width: 40px;
+      height: 40px;
+      object-fit: contain;
+      margin-bottom: 5px;
+    }
+
+    .payment-method span {
+      font-size: 0.9rem;
+    }
+
+    .order-summary {
+      background: #fff;
+      border-radius: 8px;
+      padding: 15px;
+      margin-top: 20px;
+    }
+
+    .order-summary h5 {
+      margin-top: 0;
+      margin-bottom: 10px;
+      color: #FFA559;
+    }
+
+    .summary-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 5px;
+    }
+
+    .total-price {
+      font-weight: bold;
+      font-size: 1.1rem;
+      color: #FFA559;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px dashed #ccc;
+    }
+
+    .submit-order-btn {
+      width: 100%;
+      padding: 12px;
+      background: #FFA559;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      margin-top: 15px;
+    }
+
+    .submit-order-btn:hover {
+      background: #e0893f;
+    }
+
+    .close-popup-btn {
+      position: absolute;
+      top: 14px;
+      right: 16px;
+      background: transparent;
+      border: none;
+      font-size: 1.4rem;
+      color: #333;
+      cursor: pointer;
+      transition: transform 0.3s ease, color 0.3s ease;
+    }
+
+    .close-popup-btn:hover {
+      transform: rotate(90deg);
+      color: #FFA559;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateY(50px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+      .menu-container {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .menu-card img {
+        height: 140px;
+      }
+
+      .payment-methods {
+        grid-template-columns: 1fr;
+      }
+
+      .order-popup-content {
+        padding: 25px 15px;
+      }
+    }
+</style>
+<body>
+    <section id="menu-dimsum">
+  <h2>Menu Dimsum Favorit</h2>
+  <p class="subtext">Kombinasi rasa klasik dan modern yang cocok untuk semua lidah.</p>
+
+  <div class="menu-container">
+    <div class="menu-card">
+      <img src="img/Dimsum.jpeg" alt="Dimsum Original">
+      <div class="menu-info">
+        <h3>Dimsum Original</h3>
+        <p>Dimsum kukus klasik dengan rasa autentik.</p>
+        <div class="rating">★★★★★</div>
+        <div class="menu-price">Rp 25.000</div>
+        <button class="buy-btn" onclick="openOrderPopup('Dimsum Original', 25000)">Beli Sekarang</button>
+      </div>
+    </div>
+
+    <div class="menu-card">
+      <img src="img/DimsumMentai.jpeg" alt="Dimsum Mentai">
+      <div class="menu-info">
+        <h3>Dimsum Mentai</h3>
+        <p>Saus mentai creamy menggoda selera.</p>
+        <div class="rating">★★★★★</div>
+        <div class="menu-price">Rp 30.000</div>
+        <button class="buy-btn" onclick="openOrderPopup('Dimsum Mentai', 30000)">Beli Sekarang</button>
+      </div>
+    </div>
+
+    <div class="menu-card">
+      <img src="img/dumpling-ikan.jpeg" alt="Dumpling Ayam">
+      <div class="menu-info">
+        <h3>Dumpling Ayam</h3>
+        <p>Isian ayam juicy dan gurih dalam balutan kulit tipis.</p>
+        <div class="rating">★★★★★</div>
+        <div class="menu-price">Rp 30.000</div>
+        <button class="buy-btn" onclick="openOrderPopup('Dumpling Ayam', 30000)">Beli Sekarang</button>
+      </div>
+    </div>
+
+    <div class="menu-card">
+      <img src="img/dumpling-ayam.jpeg" alt="Dumpling Ayam">
+      <div class="menu-info">
+        <h3>Dumpling Ayam</h3>
+        <p>Isian ayam juicy dan gurih dalam balutan kulit tipis.</p>
+        <div class="rating">★★★★★</div>
+        <div class="menu-price">Rp 30.000</div>
+        <button class="buy-btn" onclick="openOrderPopup('Dumpling Ayam', 30000)">Beli Sekarang</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Order Popup -->
+<div class="order-popup" id="orderPopup">
+  <div class="order-popup-content">
+    <button class="close-popup-btn" onclick="closeOrderPopup()" aria-label="Tutup Popup">&times;</button>
+    <div class="order-popup-header">
+      <h4 id="popupMenuTitle">Pesan Menu</h4>
+      <p class="order-popup-subtext">Isi formulir di bawah untuk melanjutkan pemesanan.</p>
+    </div>
+    
+    <div class="order-popup-body">
+      <div class="form-group">
+        <label for="orderQuantity">Jumlah Paket</label>
+        <select id="orderQuantity" onchange="calculateTotal()">
+          <option value="1">1 Paket</option>
+          <option value="2">2 Paket</option>
+          <option value="3">3 Paket</option>
+          <option value="4">4 Paket</option>
+          <option value="5">5 Paket</option>
+          <option value="6">6 Paket</option>
+          <option value="7">7 Paket</option>
+          <option value="8">8 Paket</option>
+          <option value="9">9 Paket</option>
+          <option value="10">10 Paket</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label for="orderSpiceLevel">Level Pedas</label>
+        <select id="orderSpiceLevel">
+          <option value="Tidak Pedas">Tidak Pedas</option>
+          <option value="Sedang">Sedang</option>
+          <option value="Pedas">Pedas</option>
+          <option value="Extra Pedas">Extra Pedas</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label>Metode Pengiriman</label>
+        <div class="delivery-option">
+          <label>
+            <input type="radio" name="deliveryMethod" value="diantar" checked onchange="toggleDeliveryAddress(true)"> 
+            Diantar
+          </label>
+          <label>
+            <input type="radio" name="deliveryMethod" value="ambil" onchange="toggleDeliveryAddress(false)"> 
+            Ambil di Tempat
+          </label>
+        </div>
+      </div>
+      
+      <div class="form-group" id="deliveryAddressGroup">
+        <label for="orderAddress">Alamat Lengkap Pengiriman</label>
+        <textarea id="orderAddress" placeholder="Masukkan alamat lengkap untuk pengiriman"></textarea>
+      </div>
+      
+      <div class="form-group">
+        <label for="orderNotes">Catatan Tambahan</label>
+        <textarea id="orderNotes" placeholder="Contoh: Tanpa kecap, tambah sambal, dll"></textarea>
+      </div>
+      
+      <div class="form-group">
+        <label>Metode Pembayaran</label>
+        <div class="payment-methods">
+          <label class="payment-method" onclick="selectPaymentMethod('cash')">
+            <input type="radio" name="paymentMethod" value="cash" checked>
+            <span>Tunai (COD)</span>
+          </label>
+          <label class="payment-method" onclick="selectPaymentMethod('dana')">
+            <input type="radio" name="paymentMethod" value="dana">
+            <span>DANA</span>
+          </label>
+          <label class="payment-method" onclick="selectPaymentMethod('gopay')">
+            <input type="radio" name="paymentMethod" value="gopay">
+            <span>GoPay</span>
+          </label>
+          <label class="payment-method" onclick="selectPaymentMethod('ovo')">
+            <input type="radio" name="paymentMethod" value="ovo">
+            <span>OVO</span>
+          </label>
+          <label class="payment-method" onclick="selectPaymentMethod('transfer')">
+            <input type="radio" name="paymentMethod" value="transfer">
+            <span>Transfer Bank</span>
+          </label>
+          <label class="payment-method" onclick="selectPaymentMethod('qris')">
+            <input type="radio" name="paymentMethod" value="qris">
+            <span>QRIS</span>
+          </label>
+        </div>
+      </div>
+      
+      <div class="order-summary">
+        <h5>Ringkasan Pesanan</h5>
+        <div class="summary-item">
+          <span>Menu:</span>
+          <span id="summaryMenu">-</span>
+        </div>
+        <div class="summary-item">
+          <span>Jumlah:</span>
+          <span id="summaryQuantity">1 Paket</span>
+        </div>
+        <div class="summary-item">
+          <span>Level Pedas:</span>
+          <span id="summarySpiceLevel">Tidak Pedas</span>
+        </div>
+        <div class="summary-item">
+          <span>Pengiriman:</span>
+          <span id="summaryDeliveryMethod">Diantar</span>
+        </div>
+        <div class="summary-item">
+          <span>Metode Bayar:</span>
+          <span id="summaryPaymentMethod">Tunai (COD)</span>
+        </div>
+        <div class="total-price">
+          <span>Total:</span>
+          <span id="summaryTotalPrice">Rp 25.000</span>
+        </div>
+      </div>
+      
+      <button class="submit-order-btn" onclick="sendOrder()">Kirim Pesanan ke WhatsApp</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  let currentItemPrice = 0;
+  
+  function openOrderPopup(menuName, price) {
+    currentItemPrice = price;
+    document.getElementById("orderPopup").style.display = "flex";
+    document.getElementById("popupMenuTitle").textContent = `Pesan ${menuName}`;
+    document.getElementById("summaryMenu").textContent = menuName;
+    calculateTotal();
+    
+    // Reset form
+    document.getElementById("orderQuantity").value = "1";
+    document.getElementById("orderSpiceLevel").value = "Tidak Pedas";
+    document.querySelector('input[name="deliveryMethod"][value="diantar"]').checked = true;
+    document.getElementById("orderAddress").value = "";
+    document.getElementById("orderNotes").value = "";
+    document.querySelector('input[name="paymentMethod"][value="cash"]').checked = true;
+    
+    // Update summary
+    document.getElementById("summaryQuantity").textContent = "1 Paket";
+    document.getElementById("summarySpiceLevel").textContent = "Tidak Pedas";
+    document.getElementById("summaryDeliveryMethod").textContent = "Diantar";
+    document.getElementById("summaryPaymentMethod").textContent = "Tunai (COD)";
+  }
+  
+  function closeOrderPopup() {
+    document.getElementById("orderPopup").style.display = "none";
+  }
+  
+  function toggleDeliveryAddress(show) {
+    document.getElementById("deliveryAddressGroup").style.display = show ? "block" : "none";
+    document.getElementById("summaryDeliveryMethod").textContent = show ? "Diantar" : "Ambil di Tempat";
+  }
+  
+  function selectPaymentMethod(method) {
+    const paymentMethods = document.querySelectorAll('.payment-method');
+    paymentMethods.forEach(pm => pm.classList.remove('selected'));
+    
+    const selectedMethod = document.querySelector(`.payment-method[onclick="selectPaymentMethod('${method}')"]`);
+    selectedMethod.classList.add('selected');
+    
+    let paymentText = "";
+    switch(method) {
+      case 'cash': paymentText = "Tunai (COD)"; break;
+      case 'dana': paymentText = "DANA"; break;
+      case 'gopay': paymentText = "GoPay"; break;
+      case 'ovo': paymentText = "OVO"; break;
+      case 'transfer': paymentText = "Transfer Bank"; break;
+      case 'qris': paymentText = "QRIS"; break;
+    }
+    
+    document.getElementById("summaryPaymentMethod").textContent = paymentText;
+  }
+  
+  function calculateTotal() {
+    const quantity = parseInt(document.getElementById("orderQuantity").value);
+    const totalPrice = quantity * currentItemPrice;
+    document.getElementById("summaryTotalPrice").textContent = `Rp ${totalPrice.toLocaleString()}`;
+    document.getElementById("summaryQuantity").textContent = `${quantity} Paket`;
+    
+    // Update spice level in summary
+    const spiceLevel = document.getElementById("orderSpiceLevel").value;
+    document.getElementById("summarySpiceLevel").textContent = spiceLevel;
+  }
+  
+  function sendOrder() {
+    const menuName = document.getElementById("popupMenuTitle").textContent.replace("Pesan ", "");
+    const quantity = document.getElementById("orderQuantity").value;
+    const spiceLevel = document.getElementById("orderSpiceLevel").value;
+    const deliveryMethod = document.querySelector('input[name="deliveryMethod"]:checked').value;
+    const address = deliveryMethod === "diantar" ? document.getElementById("orderAddress").value : "Ambil di Tempat";
+    const notes = document.getElementById("orderNotes").value;
+    const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+    const totalPrice = parseInt(quantity) * currentItemPrice;
+    
+    let paymentText = "";
+    switch(paymentMethod) {
+      case 'cash': paymentText = "Tunai (COD)"; break;
+      case 'dana': paymentText = "DANA"; break;
+      case 'gopay': paymentText = "GoPay"; break;
+      case 'ovo': paymentText = "OVO"; break;
+      case 'transfer': paymentText = "Transfer Bank"; break;
+      case 'qris': paymentText = "QRIS"; break;
+    }
+    
+    const message = `Halo, saya ingin memesan:
+    
+📌 *Menu*: ${menuName}
+🔢 *Jumlah*: ${quantity} Paket
+🌶️ *Level Pedas*: ${spiceLevel}
+🚚 *Pengiriman*: ${deliveryMethod === "diantar" ? "Diantar" : "Ambil di Tempat"}
+🏠 *Alamat*: ${address}
+📝 *Catatan*: ${notes || "-"}
+💳 *Metode Pembayaran*: ${paymentText}
+💰 *Total Pembayaran*: Rp ${totalPrice.toLocaleString()}
+
+Silakan konfirmasi ketersediaan dan total yang harus dibayar. Terima kasih!`;
+    
+    const whatsappUrl = `https://wa.me/6285213963005?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
+    closeOrderPopup();
+  }
+  
+  // Initialize
+  document.addEventListener('DOMContentLoaded', function() {
+    // Select first payment method by default
+    selectPaymentMethod('cash');
+    // Set delivery address to show by default
+    toggleDeliveryAddress(true);
+    
+    // Add event listeners for dynamic updates
+    document.getElementById("orderSpiceLevel").addEventListener('change', function() {
+      document.getElementById("summarySpiceLevel").textContent = this.value;
+    });
+    
+    document.querySelectorAll('input[name="deliveryMethod"]').forEach(radio => {
+      radio.addEventListener('change', function() {
+        document.getElementById("summaryDeliveryMethod").textContent = 
+          this.value === "diantar" ? "Diantar" : "Ambil di Tempat";
+      });
+    });
+    
+    document.querySelectorAll('input[name="paymentMethod"]').forEach(radio => {
+      radio.addEventListener('change', function() {
+        let paymentText = "";
+        switch(this.value) {
+          case 'cash': paymentText = "Tunai (COD)"; break;
+          case 'dana': paymentText = "DANA"; break;
+          case 'gopay': paymentText = "GoPay"; break;
+          case 'ovo': paymentText = "OVO"; break;
+          case 'transfer': paymentText = "Transfer Bank"; break;
+          case 'qris': paymentText = "QRIS"; break;
+        }
+        document.getElementById("summaryPaymentMethod").textContent = paymentText;
+      });
+    });
+  });
+</script>
+</body>
+</html>

@@ -2108,57 +2108,78 @@
   top: 0; left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(6px);
+  background: rgba(30, 30, 30, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   justify-content: center;
   align-items: center;
-  z-index: 999;
+  z-index: 9999;
 }
 
-/* KARTU POPUP */
+/* POPUP CARD */
 .popup-content-order {
-  background: #ffffff;
-  color: #333;
-  border-radius: 16px;
-  padding: 30px 24px;
+  background: #fefefe;
+  color: #222;
+  border-radius: 20px;
+  padding: 32px 28px;
   width: 100%;
-  max-width: 420px;
+  max-width: 460px;
   text-align: center;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
-  position: relative;
-  font-family: "Segoe UI", sans-serif;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  border: 1px solid #eee;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
-/* TOMBOL CLOSE */
+/* CLOSE BUTTON */
 .popup-close {
   position: absolute;
-  top: 12px;
-  right: 16px;
+  top: 16px;
+  right: 20px;
   font-size: 1.5rem;
+  color: #999;
   background: none;
   border: none;
   cursor: pointer;
-  color: #999;
+  transition: color 0.2s ease;
 }
 .popup-close:hover {
-  color: #222;
+  color: #333;
 }
 
-/* TOMBOL UTAMA */
+/* VOUCHER STYLE */
+.voucher {
+  background: #f9f9f9;
+  border: 1px dashed #bbb;
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #444;
+  user-select: all;
+}
+
+/* CTA BUTTON */
 .popup-content-order button {
   background-color: #25d366;
-  color: white;
+  color: #fff;
   border: none;
-  padding: 12px 24px;
-  border-radius: 8px;
+  padding: 14px 24px;
+  border-radius: 10px;
   font-size: 1rem;
   cursor: pointer;
-  margin-top: 20px;
   font-weight: 600;
+  transition: background 0.2s ease, transform 0.2s ease;
+  box-shadow: 0 6px 14px rgba(37, 211, 102, 0.3);
 }
+
 .popup-content-order button:hover {
   background-color: #1ea955;
+  transform: translateY(-1px);
 }
+
 
 .card.open iconify-icon {
   display: block !important;

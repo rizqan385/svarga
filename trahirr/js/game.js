@@ -112,21 +112,22 @@ function resetGame() {
   interval = setInterval(() => {
     timer--;
     timerEl.innerText = `Waktu: ${timer}`;
-    if (timer <= 0) {
-      clearInterval(interval);
-      chances--;
-      failSound.play();
-      if (chances > 0) {
-        updateLives();
-        resultEl.innerText = `⏰ Waktu habis! Sisa nyawa: ${chances}. Main lagi!`;
-        setTimeout(() => resetGame(), 1500);
-      } else {
-        const nextTime = new Date().getTime() + 24 * 60 * 60 * 1000;
-        localStorage.setItem('playedUntil', nextTime);
-        resultEl.innerText = '💀 Kesempatan habis! Coba lagi besok.';
-        updateLives();
-      }
-    }
+if (timer <= 0) {
+  clearInterval(interval);
+  chances--;
+  failSound?.play();
+  updateLives();
+
+  if (chances > 0) {
+    resultEl.innerText = `⏰ Waktu habis! Sisa nyawa: ${chances}. Game di-reset.`;
+    setTimeout(resetGame, 1000); // reset cepat 1 detik
+  } else {
+    resultEl.innerText = '💀 Kesempatan habis! Coba lagi besok.';
+    const nextTime = new Date().getTime() + 24 * 60 * 60 * 1000;
+    localStorage.setItem('playedUntil', nextTime);
+  }
+}
+
   }, 1000);
 }
 
